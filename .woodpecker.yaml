@@ -13,20 +13,40 @@ steps:
         from_secret: ghcr_token
       tags: ${CI_COMMIT_TAG}
 
-  - name: discord notification
+  - name: discord success notification
     image: appleboy/drone-discord
     settings:
       webhook_id:
         from_secret: discord_webhook_id
       webhook_token:
         from_secret: discord_webhook_token
+      drone_build_finished: ${CI_STEP_STARTED}
       message: >
-        {{#success build.status}}✅{{else}}❌{{/success}}  Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
+        ✅ Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
             - Commit [[{{commit.sha}}]({{commit.link}})]
             - Author `[{{commit.author}} / {{commit.email}}]`
             - Message: {{commit.message}}
-            - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[{{uppercase build.status}}]` at <t:{{build.finished}}:f>
+            - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[SUCCESS]` at <t:{{build.finished}}:f>
 
     depends_on: [publish_image]
     when:
-      status: [success, failure, changed]
+      status: [success]
+
+  - name: discord failed notification
+    image: appleboy/drone-discord
+    settings:
+      webhook_id:
+        from_secret: discord_webhook_id
+      webhook_token:
+        from_secret: discord_webhook_token
+      drone_build_finished: ${CI_STEP_STARTED}
+      message: >
+        ❌ Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
+            - Commit [[{{commit.sha}}]({{commit.link}})]
+            - Author `[{{commit.author}} / {{commit.email}}]`
+            - Message: {{commit.message}}
+            - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[FAILED]` at <t:{{build.finished}}:f>
+
+    depends_on: [publish_image]
+    when:
+      status: [failure]
