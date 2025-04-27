@@ -1,0 +1,32 @@
+when:
+  - event: tag
+
+steps:
+  - name: publish_image
+    image: woodpeckerci/plugin-kaniko
+    settings:
+      registry: ghcr.io
+      repo: ${CI_REPO}
+      username:
+        from_secret: ghcr_username
+      password:
+        from_secret: ghcr_token
+      tags: ${CI_COMMIT_TAG}
+
+  - name: discord notification
+    image: appleboy/drone-discord
+    settings:
+      webhook_id:
+        from_secret: discord_webhook_id
+      webhook_token:
+        from_secret: discord_webhook_token
+      message: >
+        {{#success build.status}}✅{{else}}❌{{/success}}  Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
+            - Commit [[{{commit.sha}}]({{commit.link}})]
+            - Author `[{{commit.author}} / {{commit.email}}]`
+            - Message: {{commit.message}}
+            - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[{{uppercase build.status}}]` at `[{{datetime build.finished "2006.01.02 15:04"}}]`
+
+    depends_on: [publish_image]
+    when:
+      status: [success, failure]
