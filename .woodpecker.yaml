@@ -22,11 +22,11 @@ steps:
         from_secret: discord_webhook_token
       message: >
         {{#success build.status}}✅{{else}}❌{{/success}}  Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
-        - Commit [[{{commit.sha}}]({{commit.link}})]
-        - Author `[{{commit.author}} / {{commit.email}}]`
-        - Message: {{commit.message}}
-        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[{{uppercase build.status}}]` at <t:{{build.finished}}:f>
+            - Commit [[{{commit.sha}}]({{commit.link}})]
+            - Author `[{{commit.author}} / {{commit.email}}]`
+            - Message: {{commit.message}}
+            - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[{{uppercase build.status}}]` at <t:{{build.finished}}:f>
 
     depends_on: [publish_image]
     when:
-      status: [success, failure]
+      status: [success, failure, changed]
