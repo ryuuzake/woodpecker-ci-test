@@ -43,9 +43,9 @@ steps:
       message: >
         ❌ Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
             - Commit [[{{commit.sha}}]({{commit.link}})]
-            - Author `[{{commit.author}} / {{commit.email}}]`
-            - Message: {{commit.message}}
-            - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[FAILED]` at <t:{{build.finished}}:f>
+          - Author `[{{commit.author}} / {{commit.email}}]`
+          - Message: {{commit.message}}
+          - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[FAILED]` at {{build.finished}}
 
     depends_on: [publish_image]
     when:
