@@ -23,10 +23,10 @@ steps:
       message: >
         ✅ Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
 
-        - Commit [[{{commit.sha}}]({{commit.link}})]
+            - Commit [[{{commit.sha}}]({{commit.link}})]
         - Author `[{{commit.author}} / {{commit.email}}]`
         - Message: {{commit.message}}
-        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[SUCCESS]` at <t:${CI_STEP_STARTED}:f>
+        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[SUCCESS]`
 
     depends_on: [publish_image]
     when:
@@ -42,10 +42,10 @@ steps:
       message: >
         ❌ Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
 
-        - Commit [[{{commit.sha}}]({{commit.link}})]
+            - Commit [[{{commit.sha}}]({{commit.link}})]
         - Author `[{{commit.author}} / {{commit.email}}]`
         - Message: {{commit.message}}
-        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[FAILED]` at ${CI_STEP_STARTED}
+        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[FAILED]`
 
     depends_on: [publish_image]
     when:
