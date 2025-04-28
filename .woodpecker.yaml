@@ -15,8 +15,6 @@ steps:
 
   - name: discord success notification
     image: appleboy/drone-discord
-    environment: 
-      DRONE_BUILD_FINISHED: ${CI_STEP_STARTED}
     settings:
       webhook_id:
         from_secret: discord_webhook_id
@@ -28,7 +26,7 @@ steps:
         - Commit [[{{commit.sha}}]({{commit.link}})]
         - Author `[{{commit.author}} / {{commit.email}}]`
         - Message: {{commit.message}}
-        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[SUCCESS]` at <t:{{build.finished}}:f>
+        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[SUCCESS]` at <t:${CI_STEP_STARTED}:f>
 
     depends_on: [publish_image]
     when:
@@ -36,8 +34,6 @@ steps:
 
   - name: discord failed notification
     image: appleboy/drone-discord
-    environment: 
-      DRONE_BUILD_FINISHED: ${CI_STEP_STARTED}
     settings:
       webhook_id:
         from_secret: discord_webhook_id
@@ -49,7 +45,7 @@ steps:
         - Commit [[{{commit.sha}}]({{commit.link}})]
         - Author `[{{commit.author}} / {{commit.email}}]`
         - Message: {{commit.message}}
-        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[FAILED]` at {{build.finished}}
+        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[FAILED]` at ${CI_STEP_STARTED}
 
     depends_on: [publish_image]
     when:
