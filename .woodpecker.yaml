@@ -15,18 +15,20 @@ steps:
 
   - name: discord success notification
     image: appleboy/drone-discord
+    environment: 
+      DRONE_BUILD_FINISHED: ${CI_STEP_STARTED}
     settings:
       webhook_id:
         from_secret: discord_webhook_id
       webhook_token:
         from_secret: discord_webhook_token
-      drone_build_finished: ${CI_STEP_STARTED}
       message: >
         ✅ Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
-            - Commit [[{{commit.sha}}]({{commit.link}})]
-            - Author `[{{commit.author}} / {{commit.email}}]`
-            - Message: {{commit.message}}
-            - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[SUCCESS]` at <t:{{build.finished}}:f>
+
+        - Commit [[{{commit.sha}}]({{commit.link}})]
+        - Author `[{{commit.author}} / {{commit.email}}]`
+        - Message: {{commit.message}}
+        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[SUCCESS]` at <t:{{build.finished}}:f>
 
     depends_on: [publish_image]
     when:
@@ -34,18 +36,20 @@ steps:
 
   - name: discord failed notification
     image: appleboy/drone-discord
+    environment: 
+      DRONE_BUILD_FINISHED: ${CI_STEP_STARTED}
     settings:
       webhook_id:
         from_secret: discord_webhook_id
       webhook_token:
         from_secret: discord_webhook_token
-      drone_build_finished: ${CI_STEP_STARTED}
       message: >
         ❌ Repository `[{{repo.name}}/{{commit.branch}}]` triggered by event `[{{uppercase build.event}}]` for build.
-            - Commit [[{{commit.sha}}]({{commit.link}})]
-          - Author `[{{commit.author}} / {{commit.email}}]`
-          - Message: {{commit.message}}
-          - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[FAILED]` at {{build.finished}}
+
+        - Commit [[{{commit.sha}}]({{commit.link}})]
+        - Author `[{{commit.author}} / {{commit.email}}]`
+        - Message: {{commit.message}}
+        - Woodpecker build [[#{{build.number}}]({{build.link}})] reported `[FAILED]` at {{build.finished}}
 
     depends_on: [publish_image]
     when:
